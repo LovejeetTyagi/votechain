@@ -1,0 +1,48 @@
+# ══════════════════════════════════════════════════════════════
+#   VoteChain — Environment Variables
+#   Copy this file to .env and fill in your actual values.
+#   NEVER commit .env to Git — add it to .gitignore
+# ══════════════════════════════════════════════════════════════
+
+
+# ── Flask ──────────────────────────────────────────────────────
+# Set to "production" when deploying
+FLASK_ENV=development
+
+# Any long random string — used to sign JWTs and Flask sessions
+# Generate one: python -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY=10aef23fa95887a24faa144fd3cd896039e34887a6683467465656555a987940
+
+
+
+# ── Firebase ───────────────────────────────────────────────────
+# Path to your Firebase service account JSON file.
+# Download from:
+#   Firebase Console → Project Settings → Service Accounts
+#   → Generate new private key → save as serviceAccountKey.json
+FIREBASE_CREDENTIALS_PATH=serviceAccountKey.json
+
+
+# ── Email — Resend (https://resend.com) ────────────────────────
+# Free tier: 100 emails/day, 3000/month — perfect for hackathon.
+# Sign up → API Keys → Create API Key → paste below.
+RESEND_API_KEY=re_eF373222_6nMkWme1hohGRUkeZtcC5L6A
+
+# The "From" address for OTP emails.
+# Must be a verified domain on Resend (or use onboarding@resend.dev for testing).
+EMAIL_FROM=onboarding@resend.dev
+
+
+# ── OTP settings ───────────────────────────────────────────────
+# How long (in seconds) the OTP stays valid. Default: 300 = 5 min.
+OTP_EXPIRY_SECONDS=300
+
+
+# ── JWT settings ───────────────────────────────────────────────
+# How many hours before the login token expires. Default: 24 hrs.
+JWT_EXPIRY_HOURS=24
+
+
+# ── Server ─────────────────────────────────────────────────────
+# Port Flask listens on locally (gunicorn overrides this in prod).
+PORT=5000

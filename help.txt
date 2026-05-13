@@ -1,0 +1,26 @@
+# Step 1 — Create virtual environment
+python3 -m venv venv
+
+# Step 2 — Activate it
+source venv/bin/activate
+
+# Step 3 — Install all dependencies
+pip install -r requirements.txt
+
+# Step 4 — Run the app
+python app.py
+
+
+//Resend Api key
+re_YYNMELzS_4iNxSHiVvMeso1iBivLcuYmS
+
+
+
+
+SECRET_KEY=74f1adeeaf3852d207b2734321f58b360168eda123e7184340394c70028d37c6
+
+RESEND_API_KEY=re_YYNMELzS_4iNxSHiVvMeso1iBivLcuYmS
+FIREBASE_CREDENTIALS_PATH=serviceAccountKey.json
+
+
+GMAIL_APP_PASSWORD=zhwg ditf kvbk gazg
