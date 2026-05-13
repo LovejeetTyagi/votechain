@@ -211,5 +211,3 @@ def me():
     if not user_doc.exists:
         return error("User not found.", 404)
     return success(data={"user": user_doc.to_dict()})
-
-print("ADMIN_SECRET_CODE =", ADMIN_SECRET_CODE)
