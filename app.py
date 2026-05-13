@@ -23,6 +23,7 @@ from votes import votes_bp
 
 
 
+
 # ── Create Flask app ──────────────────────────────────────────────────────────
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="frontend", static_url_path="")
@@ -75,6 +76,13 @@ if __name__ == "__main__":
     port  = int(os.getenv("PORT", 5000))
     debug = os.getenv("FLASK_ENV", "development") == "development"
     app.run(host="0.0.0.0", port=port, debug=debug)
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    import traceback
+    app.logger.error(traceback.format_exc())
+    return jsonify({"error": str(e)}), 500    
 
 
 
