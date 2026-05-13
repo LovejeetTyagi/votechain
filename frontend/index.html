@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteChain — Secure Online Voting</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ─── HEADER ──────────────────────────────────────────────────────────── -->
+<header class="header">
+  <div class="logo">
+    <span class="logo-dot"></span> VoteChain
+  </div>
+  <div class="header-right" id="headerRight" style="display:none">
+    <button id="theme-toggle" onclick="toggleTheme()" style="
+  padding:8px 14px;border-radius:8px;border:1px solid #ccc;
+  background:none;cursor:pointer;font-size:16px">
+  🌙
+</button>
+    <div class="user-pill">
+      <div class="avatar" id="avatarEl"></div>
+      <span id="userNameEl"></span>
+    </div>
+    <span class="badge-role" id="roleEl"></span>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">Sign out</button>
+  </div>
+</header>
+
+<!-- ─── TOAST ────────────────────────────────────────────────────────────── -->
+<div class="toast hidden" id="toast">
+  <span id="toastIcon">✓</span>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- ─── LOADING SPINNER ──────────────────────────────────────────────────── -->
+<div id="loadingOverlay" class="loading-overlay hidden">
+  <div class="spinner"></div>
+</div>
+
+<!-- ─── MAIN APP ─────────────────────────────────────────────────────────── -->
+<main class="app">
+
+  <!-- AUTH SCREEN -->
+  <section class="screen active" id="screenAuth">
+    <div class="auth-wrap">
+      <div class="auth-glow">🗳️</div>
+      <h1 class="auth-title">Secure Online Voting</h1>
+      <p class="auth-sub">OTP-verified, real-time elections for everyone.</p>
+
+      <div class="auth-card">
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchTab('login')">Sign in</button>
+          <button class="auth-tab" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="tabLogin">
+          <label for="loginEmail">Email address</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" />
+
+          <div id="loginOtpSection" style="display:none">
+            <label for="loginOtp">One-time password</label>
+            <input type="text" id="loginOtp" placeholder="6-digit code" maxlength="6" />
+            <div class="info-box">📨 OTP sent! Check your inbox.</div>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="loginBtn" onclick="loginFlow()">
+            Send OTP →
+          </button>
+          <p class="hint">We'll email you a one-time code — no password needed.</p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="tabRegister" style="display:none">
+          <label for="regName">Full name</label>
+          <input type="text" id="regName" placeholder="Priya Sharma" />
+
+          <label for="regEmail">Email address</label>
+          <input type="email" id="regEmail" placeholder="you@example.com" />
+
+          <label for="regRole">Account role</label>
+          <select id="regRole">
+            <option value="voter">Voter — cast votes</option>
+            <option value="admin">Admin — create & manage polls</option>
+          </select>
+
+          <div id="regOtpSection" style="display:none">
+            <label for="regOtp">One-time password</label>
+            <input type="text" id="regOtp" placeholder="6-digit code" maxlength="6" />
+            <div class="info-box">📨 OTP sent! Check your inbox.</div>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="regBtn" onclick="registerFlow()">
+            Send OTP →
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD SCREEN -->
+  <section class="screen" id="screenDash">
+
+    <!-- Top bar -->
+    <div class="dash-header">
+      <div>
+        <h2 class="dash-title">Election Dashboard</h2>
+        <div class="dash-sub"><span class="live-dot">Live results</span></div>
+      </div>
+      <button class="btn btn-primary" id="createPollBtn"
+              style="display:none" onclick="openModal()">
+        + Create Poll
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card stat-blue">
+        <div class="stat-num" id="statActive">—</div>
+        <div class="stat-label">Active polls</div>
+      </div>
+      <div class="stat-card stat-green">
+        <div class="stat-num" id="statVotes">—</div>
+        <div class="stat-label">Votes cast</div>
+      </div>
+      <div class="stat-card stat-purple">
+        <div class="stat-num" id="statMyVotes">—</div>
+        <div class="stat-label">My votes</div>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs">
+      <button class="ftab active" onclick="setFilter('all', this)">All</button>
+      <button class="ftab" onclick="setFilter('active', this)">Active</button>
+      <button class="ftab" onclick="setFilter('closed', this)">Closed</button>
+    </div>
+
+    <!-- Poll cards -->
+    <div id="pollsGrid" class="polls-grid"></div>
+
+  </section>
+
+</main>
+
+<!-- ─── CREATE POLL MODAL ─────────────────────────────────────────────────── -->
+<div class="modal-overlay hidden" id="createModal" onclick="closeModalOutside(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 class="modal-title">📋 Create New Poll</h3>
+
+    <label for="newQ">Question</label>
+    <input type="text" id="newQ" placeholder="What should we decide?" />
+
+    <label for="newDesc">Description <span style="font-weight:400;opacity:.6">(optional)</span></label>
+    <input type="text" id="newDesc" placeholder="Brief context for voters" />
+
+    <label>Options <span style="font-weight:400;opacity:.6">(min 2)</span></label>
+    <div id="optionsList">
+      <div class="opt-row"><input type="text" class="opt-input" placeholder="Option A" /><button class="btn-x" onclick="removeOpt(this)">×</button></div>
+      <div class="opt-row"><input type="text" class="opt-input" placeholder="Option B" /><button class="btn-x" onclick="removeOpt(this)">×</button></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:.5rem" onclick="addOpt()">+ Add option</button>
+
+    <label for="newStatus">Poll status</label>
+    <select id="newStatus">
+      <option value="active">Active — open for voting</option>
+      <option value="closed">Closed — view results only</option>
+    </select>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPoll()">Create poll →</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="dashboard.js"></script>
+
+</body>
+</html>

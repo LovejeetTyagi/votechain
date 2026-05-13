@@ -1,0 +1,38 @@
+# ══════════════════════════════════════════════════════════════
+#   VoteChain — Environment Variables
+#   NEVER commit this file to Git — add .env to .gitignore
+# ══════════════════════════════════════════════════════════════
+
+
+# ── Flask ──────────────────────────────────────────────────────
+FLASK_ENV=development
+
+# Generate with: python3 -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY=change-this-to-a-long-random-secret-string-before-deploy
+
+
+# ── Firebase ───────────────────────────────────────────────────
+# Path to your downloaded Firebase service account JSON file
+FIREBASE_CREDENTIALS_PATH=serviceAccountKey.json
+
+
+# ── Gmail SMTP ─────────────────────────────────────────────────
+# Your Gmail address
+GMAIL_USER=lovejeettyagi16@gmail.com
+
+# App Password (NOT your Gmail login password)
+# Get it from: myaccount.google.com → Security → 2-Step Verification → App Passwords
+# It looks like: abcd efgh ijkl mnop
+GMAIL_APP_PASSWORD=your-16-char-app-password-here
+
+
+# ── OTP settings ───────────────────────────────────────────────
+OTP_EXPIRY_SECONDS=300
+
+
+# ── JWT settings ───────────────────────────────────────────────
+JWT_EXPIRY_HOURS=24
+
+
+# ── Server ─────────────────────────────────────────────────────
+PORT=5000
